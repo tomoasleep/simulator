@@ -119,11 +119,11 @@ object Instruction {
 
   case class Iw(rd:Reg) extends Instruction with IO { val rs = 0; val rt = 0; val funct = 3 }
   case class Ib(rd:Reg) extends Instruction with IO { val rs = 0; val rt = 0; val funct = 4 }
-  case class Ih(rd:Reg) extends Instruction with IO { val rs = 0; val rt = 0; val funct = 6 }
+  case class Ih(rd:Reg) extends Instruction with IO { val rs = 0; val rt = 0; val funct = 5 }
   case class Ow(rs:Reg) extends Instruction with IO { val rt = 0; val rd = 0; val funct = 11 }
   case class Ob(rs:Reg) extends Instruction with IO { val rt = 0; val rd = 0; val funct = 12 }
   case class Oh(rs:Reg) extends Instruction with IO { val rt = 0; val rd = 0; val funct = 13 }
-  case class Iwf(rd:Reg) extends Instruction with IO { val rs = 0; val rt = 0; val funct = 17 } 
+  case class Iwf(rd:Reg) extends Instruction with IO { val rs = 0; val rt = 0; val funct = 17 }
   case class Owf(rs:Reg) extends Instruction with IO { val rt = 0; val rd = 0; val funct = 25 }
   case class Dump(rs:Reg) extends Instruction with IO  { val rt = 0; val rd = 0; val funct = 30 }
   case class Dumpf(rs:Reg) extends Instruction with IO { val rt = 0; val rd = 0; val funct = 31 }
