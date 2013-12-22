@@ -9,11 +9,10 @@ import scala.math._
 import scala.Console
 
 import Instruction._
-import Program._
 
 class Simulator(val program:Program, val settings:Settings) {
   import program.{instructions, lineNumber}
-  import settings.{keepStats, binMode}
+  import settings.{keepStats, binMode, useFPU, dumpFops}
 
   // registers
   private[this] var pc = 0
@@ -30,6 +29,8 @@ class Simulator(val program:Program, val settings:Settings) {
   private[this] val scanner = new Scanner(System.in)
   private[this] val binIn = new DataInputStream(System.in)
   private[this] val buf = new Array[Byte](4)
+
+  private[this] val fpu = new FPU(dumpFops)
 
   def reset() {
     pc = 0
@@ -126,14 +127,14 @@ class Simulator(val program:Program, val settings:Settings) {
       case Jal(addr) => r(ra) = pc; pc = addr
       case Halt(_) => pc = instructions.length
       // F format
-      case Fadd(fd, fs, ft) => f(fd) = f(fs) + f(ft)
-      case Fsub(fd, fs, ft) => f(fd) = f(fs) - f(ft)
-      case Fmul(fd, fs, ft) => f(fd) = f(fs) * f(ft)
-      case Fdiv(fd, fs, ft) => f(fd) = f(fs) / f(ft)
+      case Fadd(fd, fs, ft) => f(fd) = if (useFPU) fpu.fadd(f(fs), f(ft)) else f(fs) + f(ft)
+      case Fsub(fd, fs, ft) => f(fd) = if (useFPU) fpu.fsub(f(fs), f(ft)) else f(fs) - f(ft)
+      case Fmul(fd, fs, ft) => f(fd) = if (useFPU) fpu.fmul(f(fs), f(ft)) else f(fs) * f(ft)
+      case Fdiv(fd, fs, ft) => f(fd) = if (useFPU) fpu.fdiv(f(fs), f(ft)) else f(fs) / f(ft)
       case Fabs(fd, fs) => f(fd) = abs(f(fs))
       case Fneg(fd, fs) => f(fd) = -f(fs)
-      case Finv(fd, fs) => f(fd) = 1.0f / f(fs)
-      case Fsqrt(fd, fs) => f(fd) = sqrt(f(fs).toDouble).toFloat
+      case Finv(fd, fs) => f(fd) = if (useFPU) fpu.finv(f(fs)) else 1.0f / f(fs)
+      case Fsqrt(fd, fs) => f(fd) = if (useFPU) fpu.fsqrt(f(fs)) else sqrt(f(fs).toDouble).toFloat
       case Fcseq(rd, fs, ft) => r(rd) = if (f(fs) == f(ft)) 1 else 0
       case Fclt(rd, fs, ft) => r(rd) = if (f(fs) < f(ft)) 1 else 0
       case Fcle(rd, fs, ft) => r(rd) = if (f(fs) <= f(ft)) 1 else 0
