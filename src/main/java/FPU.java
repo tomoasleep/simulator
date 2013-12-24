@@ -138,7 +138,9 @@ class FPU {
     }
 
     float fsqrt(float a) throws IOException {
-        float r = (float) Math.sqrt((double) a);
+        int a_int = FsqrtCalculator.getUint32_t(a);
+        int r_int = FsqrtCalculator.fsqrt(a_int);
+        float r = FsqrtCalculator.getFloat(r_int);
 
         if (dumpEnable && splitCount <= SPLIT_LIMIT) {
             if (fsqrtCount % SPLIT_SIZE == 0 ) {
