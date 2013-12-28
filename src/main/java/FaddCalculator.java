@@ -5,19 +5,22 @@ import java.util.Random;
 import cpuex4.FPUUtils.*;
 
 public class FaddCalculator {
-    static final boolean debug = false;
+    static public FaddCalculator calc = new FaddCalculator(false);
+    static public FaddCalculator calc_debug = new FaddCalculator(true);
 
-    public static int fsub(int a, int b) {
-        return fadd(a, setSign(b, ~getSign(b)));
+    private boolean debug;
+
+    FaddCalculator (boolean debug_flag) {
+        debug = debug_flag;
     }
 
-    public static int fadd(int a, int b) {
+    public int fadd(int a, int b) {
         // swap to be abs(a) > abs(b)
         if (getAbs(a) < getAbs(b)) {
             int tmp = a; a = b; b = tmp;
         }
 
-        if (debug) System.out.printf("a: %08x, b: %08x\n", a, b);
+        if (debug) System.err.printf("a: %08x, b: %08x\n", a, b);
 
         // convert fraction sum format
         // [1, fraction(23bit), g]
@@ -42,9 +45,9 @@ public class FaddCalculator {
             spare_round = getRound(b, exp_diff - 2);
         }
 
-        if (debug) System.out.printf("exp_diff: %d - %d = %d\n",
+        if (debug) System.err.printf("exp_diff: %d - %d = %d\n",
                 getExp(a), getExp(b), exp_diff);
-        if (debug) System.out.printf("round: %d, spare_guard: %d, spare_round: %d\n",
+        if (debug) System.err.printf("round: %d, spare_guard: %d, spare_round: %d\n",
                 round, spare_guard, spare_round);
 
         // add fractions
@@ -58,7 +61,7 @@ public class FaddCalculator {
             frac_sum = frac_add_a - frac_add_b;
         }
 
-        if (debug) System.out.printf("frac_sum: %08x %c %08x = %08x\n",
+        if (debug) System.err.printf("frac_sum: %08x %c %08x = %08x\n",
                 frac_add_a, (getSign(a) == getSign(b) ? '+' : '-'),
                 frac_add_b, frac_sum);
 
@@ -68,7 +71,7 @@ public class FaddCalculator {
         int msb = findMSB(frac_sum);
         int frac_shift_error = msb - 24;
 
-        if (debug) System.out.printf("msb: %d, frac_shift_error: %d\n", msb, frac_shift_error);
+        if (debug) System.err.printf("msb: %d, frac_shift_error: %d\n", msb, frac_shift_error);
 
         // exp and sign
         int result = 0;
@@ -87,7 +90,7 @@ public class FaddCalculator {
                 frac_sum -= filterRound(frac_sum, 0, spare_round) & spare_guard;
             }
 
-            if (debug) System.out.printf("frac_sum: %08x, result: %08x\n", frac_sum, result);
+            if (debug) System.err.printf("frac_sum: %08x, result: %08x\n", frac_sum, result);
 
             result = setFrac(result, getFrac(frac_sum << Math.abs(frac_shift_error + remove_g_bit_shamt)));
         } else { 
@@ -110,7 +113,7 @@ public class FaddCalculator {
                 }
             }
 
-            if (debug) System.out.printf("frac_sum: %08x, result: %08x\n", frac_sum, result);
+            if (debug) System.err.printf("frac_sum: %08x, result: %08x\n", frac_sum, result);
 
             // round up exponents
             if ((frac_sum >> (frac_shift_error + remove_g_bit_shamt)) >= 0x1000000) {
@@ -124,48 +127,48 @@ public class FaddCalculator {
         // infinity
         if (getExp(result) == 0xff) return setFrac(result, 0);
 
-        if (debug) System.out.printf("result: %08x\n", result);
-        if (debug) System.out.println("-------------");
+        if (debug) System.err.printf("result: %08x\n", result);
+        if (debug) System.err.println("-------------");
 
         return result;
     }
 
-    private static int getSign(int a) {
-        if (false) System.out.printf("getSign(%08x: %d): %b\n", a, a, a < 0);
+    private int getSign(int a) {
+        if (false) System.err.printf("getSign(%08x: %d): %b\n", a, a, a < 0);
         return (a < 0) ? 1 : 0;
     }
 
-    private static int getExp(int a) {
+    private int getExp(int a) {
         return (a & 0x7F800000) >> 23;
     }
 
-    private static int getFrac(int a) {
+    private int getFrac(int a) {
         return (a & 0x007FFFFF);
     }
 
-    private static int getRange(int a, int max) {
+    private int getRange(int a, int max) {
         int filter = max < 0 ? 0 : (0xFFFFFFFF >>> (31 - max));
         return a & filter;
     }
 
-    private static int getRange(int a, int max, int min) {
+    private int getRange(int a, int max, int min) {
         int filter = min < 0 ? ~0 : ~(0xFFFFFFFF >>> (31 - min));
         return getRange(a, max) & filter;
     }
 
-    private static int getAbs(int a) {
+    private int getAbs(int a) {
         return (a & 0x7FFFFFFF);
     }
 
-    private static int setSign(int a, int sign) {
+    private int setSign(int a, int sign) {
         return (a & 0x7FFFFFFF) | ((sign & 0x1) << 31);
     }
 
-    private static int setExp(int a, int exp) {
+    private int setExp(int a, int exp) {
         return (a & 0x807FFFFF) | ((exp & 0xFF) << 23);
     }
 
-    private static int setFrac(int a, int frac) {
+    private int setFrac(int a, int frac) {
         return (a & 0xff800000) | (frac & 0x7FFFFF);
     }
 
@@ -173,11 +176,11 @@ public class FaddCalculator {
     // Example:
     //   getBit(0x10, 4)
     //     => 0x1
-    private static int getBit(int a, int pos) {
+    private int getBit(int a, int pos) {
         return (a & (0x1 << pos)) >> pos;
     }
 
-    private static int findMSB(int a) {
+    private int findMSB(int a) {
         for (int i = 26;  i >= 0; i--) {
             if (getBit(a, i) != 0) {
                 return i;
@@ -186,28 +189,29 @@ public class FaddCalculator {
         return 0;
     }
 
-    private static int getRound(int a, int shamt) {
-        if (debug) System.out.printf("getRound(%08x, %d): %06x, %b\n",
+    private int getRound(int a, int shamt) {
+        if (debug) System.err.printf("getRound(%08x, %d): %06x, %b\n",
                 a, shamt,
                 getRange(a, shamt - 1),
                 getRange(a, shamt - 1) != 0);
         return getRange(a, shamt - 1) != 0 ? 1 : 0;
     }
 
-    private static int filterRound(int a, int shamt, int round) {
+    private int filterRound(int a, int shamt, int round) {
         return (getBit(a >> shamt, 0) | round) & 0x1;
     }
 
     public static boolean validCheck(float a, float b) {
         int a_int = FPUUtils.getUint32_t(a);
         int b_int = FPUUtils.getUint32_t(b);
-        int my_result_int = fadd(a_int, b_int);
+        int my_result_int = calc.fadd(a_int, b_int);
         float my_result = FPUUtils.getFloat(my_result_int);
         float result = a + b;
         if (my_result != result) {
-            System.out.printf("error: %e + %e = %e, but %e\n",
+            calc_debug.fadd(a_int, b_int);
+            System.err.printf("error: %e + %e = %e, but %e\n",
                     a, b, result, my_result);
-            System.out.printf("error: %08x + %08x = %08x, but %08x\n",
+            System.err.printf("error: %08x + %08x = %08x, but %08x\n",
                     a_int, b_int,
                     FPUUtils.getUint32_t(result), my_result_int);
         }
@@ -226,11 +230,11 @@ public class FaddCalculator {
                 float a = random_float();
                 float b = random_float();
                 if ( !validCheck(a, b) ) {
-                    System.out.println("failed.");
+                    System.err.println("failed.");
                     return; 
                 } 
             }
-            System.out.println("successed.");
+            System.err.println("successed.");
         } catch (Exception e) {
         }
     }
