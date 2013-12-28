@@ -50,4 +50,17 @@ public class FsqrtCalculator {
         return FPUUtils.float_with( 0, exp - 1, frac >> 2 );
     }
 
+    public static boolean validCheck(float a) {
+        float my_result = fsqrt(a);
+        float result = (float) Math.sqrt((double)a);
+        if (my_result != result) {
+            System.err.printf("error: fsqrt(%e) = %e, but %e\n",
+                    a, result, my_result);
+            System.err.printf("error: fsqrt(%08x) = %08x, but %08x\n",
+                    FPUUtils.getUint32_t(a),
+                    FPUUtils.getUint32_t(result), FPUUtils.getUint32_t(my_result));
+        }
+        return my_result == result;
+    }
+
 }
