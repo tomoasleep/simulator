@@ -6,6 +6,10 @@ import java.util.Random;
 public class FaddCalculator {
     static final boolean debug = false;
 
+    public static int fsub(int a, int b) {
+        return fadd(a, setSign(b, ~getSign(b)));
+    }
+
     public static int fadd(int a, int b) {
         // swap to be abs(a) > abs(b)
         if (getAbs(a) < getAbs(b)) {
