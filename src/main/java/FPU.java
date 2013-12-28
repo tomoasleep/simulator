@@ -32,6 +32,8 @@ class FPU {
         int r_int = FaddCalculator.calc.fadd(a_int, b_int);
         float r = FPUUtils.getFloat(r_int);
 
+        FaddCalculator.validCheck(a, b);
+
         if (dumpEnable && splitCount <= SPLIT_LIMIT) {
             if (faddCount % SPLIT_SIZE == 0 ) {
                 splitCount++;
