@@ -14,7 +14,12 @@ public class FaddCalculator {
         debug = debug_flag;
     }
 
-    public int fadd(int a, int b) {
+    public float fadd(float a, float b) {
+        return FPUUtils.getFloat(
+                fadd_uint32_t(FPUUtils.getUint32_t(a), FPUUtils.getUint32_t(b)));
+    }
+
+    public int fadd_uint32_t(int a, int b) {
         // swap to be abs(a) > abs(b)
         if (getAbs(a) < getAbs(b)) {
             int tmp = a; a = b; b = tmp;
@@ -202,18 +207,15 @@ public class FaddCalculator {
     }
 
     public static boolean validCheck(float a, float b) {
-        int a_int = FPUUtils.getUint32_t(a);
-        int b_int = FPUUtils.getUint32_t(b);
-        int my_result_int = calc.fadd(a_int, b_int);
-        float my_result = FPUUtils.getFloat(my_result_int);
+        float my_result = calc.fadd(a, b);
         float result = a + b;
         if (my_result != result) {
-            calc_debug.fadd(a_int, b_int);
+            calc_debug.fadd(a, b);
             System.err.printf("error: %e + %e = %e, but %e\n",
                     a, b, result, my_result);
             System.err.printf("error: %08x + %08x = %08x, but %08x\n",
-                    a_int, b_int,
-                    FPUUtils.getUint32_t(result), my_result_int);
+                    FPUUtils.getUint32_t(a), FPUUtils.getUint32_t(b),
+                    FPUUtils.getUint32_t(result), FPUUtils.getUint32_t(my_result));
         }
         return my_result == result;
     }

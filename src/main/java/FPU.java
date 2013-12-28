@@ -27,11 +27,7 @@ class FPU {
     // TODO: These implementation should be functionally equivalent to FPU's 
 
     float fadd(float a, float b) throws IOException {
-        int a_int = FPUUtils.getUint32_t(a);
-        int b_int = FPUUtils.getUint32_t(b);
-        int r_int = FaddCalculator.calc.fadd(a_int, b_int);
-        float r = FPUUtils.getFloat(r_int);
-
+        float r = FaddCalculator.calc.fadd(a, b);
         FaddCalculator.validCheck(a, b);
 
         if (dumpEnable && splitCount <= SPLIT_LIMIT) {
