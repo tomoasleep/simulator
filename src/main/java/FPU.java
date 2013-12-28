@@ -27,10 +27,10 @@ class FPU {
     // TODO: These implementation should be functionally equivalent to FPU's 
 
     float fadd(float a, float b) throws IOException {
-        int a_int = FinvCalculator.getUint32_t(a);
-        int b_int = FinvCalculator.getUint32_t(b);
+        int a_int = FPUUtils.getUint32_t(a);
+        int b_int = FPUUtils.getUint32_t(b);
         int r_int = FaddCalculator.fadd(a_int, b_int);
-        float r = FinvCalculator.getFloat(r_int);
+        float r = FPUUtils.getFloat(r_int);
 
         if (dumpEnable && splitCount <= SPLIT_LIMIT) {
             if (faddCount % SPLIT_SIZE == 0 ) {
@@ -52,10 +52,10 @@ class FPU {
     }
 
     float fsub(float a, float b) throws IOException {
-        int a_int = FinvCalculator.getUint32_t(a);
-        int b_int = FinvCalculator.getUint32_t(b);
+        int a_int = FPUUtils.getUint32_t(a);
+        int b_int = FPUUtils.getUint32_t(b);
         int r_int = FaddCalculator.fsub(a_int, b_int);
-        float r = FinvCalculator.getFloat(r_int);
+        float r = FPUUtils.getFloat(r_int);
 
 
         if (dumpEnable && splitCount <= SPLIT_LIMIT) {
@@ -122,9 +122,9 @@ class FPU {
     }
 
     float finv(float a) throws IOException {
-        int a_int = FinvCalculator.getUint32_t(a);
+        int a_int = FPUUtils.getUint32_t(a);
         int r_int = FinvCalculator.finv(a_int);
-        float r = FinvCalculator.getFloat(r_int);
+        float r = FPUUtils.getFloat(r_int);
 
         if (dumpEnable && splitCount <= SPLIT_LIMIT) {
             if (finvCount % SPLIT_SIZE == 0 ) {
@@ -145,9 +145,9 @@ class FPU {
     }
 
     float fsqrt(float a) throws IOException {
-        int a_int = FsqrtCalculator.getUint32_t(a);
+        int a_int = FPUUtils.getUint32_t(a);
         int r_int = FsqrtCalculator.fsqrt(a_int);
-        float r = FsqrtCalculator.getFloat(r_int);
+        float r = FPUUtils.getFloat(r_int);
 
         if (dumpEnable && splitCount <= SPLIT_LIMIT) {
             if (fsqrtCount % SPLIT_SIZE == 0 ) {

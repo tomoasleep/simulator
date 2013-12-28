@@ -2,6 +2,7 @@ package cpuex4;
 
 import java.io.*;
 import java.util.Random;
+import cpuex4.FPUUtils.*;
 
 public class FaddCalculator {
     static final boolean debug = false;
@@ -198,17 +199,17 @@ public class FaddCalculator {
     }
 
     public static boolean validCheck(float a, float b) {
-        int a_int = Float.floatToRawIntBits(a);
-        int b_int = Float.floatToRawIntBits(b);
+        int a_int = FPUUtils.getUint32_t(a);
+        int b_int = FPUUtils.getUint32_t(b);
         int my_result_int = fadd(a_int, b_int);
-        float my_result = Float.intBitsToFloat(my_result_int);
+        float my_result = FPUUtils.getFloat(my_result_int);
         float result = a + b;
         if (my_result != result) {
             System.out.printf("error: %e + %e = %e, but %e\n",
                     a, b, result, my_result);
             System.out.printf("error: %08x + %08x = %08x, but %08x\n",
                     a_int, b_int,
-                    Float.floatToRawIntBits(result), my_result_int);
+                    FPUUtils.getUint32_t(result), my_result_int);
         }
         return my_result == result;
     }
