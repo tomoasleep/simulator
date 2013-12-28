@@ -53,7 +53,7 @@ public class FsqrtCalculator {
     public static boolean validCheck(float a) {
         float my_result = fsqrt(a);
         float result = (float) Math.sqrt((double)a);
-        if (my_result != result) {
+        if (!is_valid_fsqrt(a, my_result)) {// !checkError(my_result, result)) {
             System.err.printf("error: fsqrt(%e) = %e, but %e\n",
                     a, result, my_result);
             System.err.printf("error: fsqrt(%08x) = %08x, but %08x\n",
@@ -63,4 +63,14 @@ public class FsqrtCalculator {
         return my_result == result;
     }
 
+    public static boolean is_valid_fsqrt(float a, float my_result) {
+
+        double my_fsqrt = (double)my_result;
+        double n_sqrt   = Math.sqrt((double)a);
+
+        return ( Double.isNaN( my_fsqrt ) &&
+                Double.isNaN( n_sqrt ) ) ||
+            Math.abs( my_fsqrt - n_sqrt ) < 
+            FPUUtils.max_double( n_sqrt * Math.pow( 2, - 20 ), Math.pow( 2, -126 ) );
+    } 
 }
