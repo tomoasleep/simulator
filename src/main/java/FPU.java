@@ -27,7 +27,10 @@ class FPU {
     // TODO: These implementation should be functionally equivalent to FPU's 
 
     float fadd(float a, float b) throws IOException {
-        float r = a + b;
+        int a_int = FinvCalculator.getUint32_t(a);
+        int b_int = FinvCalculator.getUint32_t(b);
+        int r_int = FaddCalculator.fadd(a_int, b_int);
+        float r = FinvCalculator.getFloat(r_int);
 
         if (dumpEnable && splitCount <= SPLIT_LIMIT) {
             if (faddCount % SPLIT_SIZE == 0 ) {
@@ -49,7 +52,11 @@ class FPU {
     }
 
     float fsub(float a, float b) throws IOException {
-        float r = a - b;
+        int a_int = FinvCalculator.getUint32_t(a);
+        int b_int = FinvCalculator.getUint32_t(b);
+        int r_int = FaddCalculator.fsub(a_int, b_int);
+        float r = FinvCalculator.getFloat(r_int);
+
 
         if (dumpEnable && splitCount <= SPLIT_LIMIT) {
             if (fsubCount % SPLIT_SIZE == 0 ) {
