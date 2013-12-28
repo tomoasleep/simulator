@@ -52,11 +52,7 @@ class FPU {
     }
 
     float fsub(float a, float b) throws IOException {
-        int a_int = FPUUtils.getUint32_t(a);
-        int b_int = FPUUtils.getUint32_t(b);
-        int r_int = FaddCalculator.fsub(a_int, b_int);
-        float r = FPUUtils.getFloat(r_int);
-
+        float r = fadd(a, -b);
 
         if (dumpEnable && splitCount <= SPLIT_LIMIT) {
             if (fsubCount % SPLIT_SIZE == 0 ) {
