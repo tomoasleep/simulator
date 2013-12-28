@@ -53,4 +53,18 @@ public class FinvCalculator {
     }
     return FPUUtils.float_with( sign1, exp, frac );
   }
+
+    public static boolean validCheck(float a) {
+        float my_result = finv(a);
+        float result = 1.0f / a;
+        if (my_result != result) {
+            System.err.printf("error: finv(%e) = %e, but %e\n",
+                    a, result, my_result);
+            System.err.printf("error: finv(%08x) = %08x, but %08x\n",
+                    FPUUtils.getUint32_t(a),
+                    FPUUtils.getUint32_t(result), FPUUtils.getUint32_t(my_result));
+        }
+        return my_result == result;
+    }
+
 }
