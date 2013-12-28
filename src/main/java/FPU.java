@@ -117,9 +117,7 @@ class FPU {
     }
 
     float finv(float a) throws IOException {
-        int a_int = FPUUtils.getUint32_t(a);
-        int r_int = FinvCalculator.finv(a_int);
-        float r = FPUUtils.getFloat(r_int);
+        float r = FinvCalculator.finv(a);
 
         if (dumpEnable && splitCount <= SPLIT_LIMIT) {
             if (finvCount % SPLIT_SIZE == 0 ) {
