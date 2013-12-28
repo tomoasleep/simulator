@@ -57,7 +57,7 @@ public class FinvCalculator {
     public static boolean validCheck(float a) {
         float my_result = finv(a);
         float result = 1.0f / a;
-        if (my_result != result) {
+        if (!is_valid_finv(a, my_result)) {
             System.err.printf("error: finv(%e) = %e, but %e\n",
                     a, result, my_result);
             System.err.printf("error: finv(%08x) = %08x, but %08x\n",
@@ -66,5 +66,18 @@ public class FinvCalculator {
         }
         return my_result == result;
     }
+
+    public static boolean is_valid_finv(float a, float my_result) {
+
+        double my_finv = (double)my_result;
+        double n_inv   = 1d / ((double)a);
+
+        return ( my_finv == Double.POSITIVE_INFINITY &&
+                n_inv == Double.POSITIVE_INFINITY ) ||
+            ( my_finv == Double.NEGATIVE_INFINITY &&
+              n_inv == Double.NEGATIVE_INFINITY ) ||
+            Math.abs( my_finv - n_inv ) < 
+            FPUUtils.max_double( Math.abs( n_inv ) * Math.pow( 2, - 20 ), Math.pow( 2, -126 ) );
+    } 
 
 }
