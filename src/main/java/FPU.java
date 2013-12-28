@@ -100,7 +100,8 @@ class FPU {
     }
 
     float fdiv(float a, float b) throws IOException {
-        float r = a / b;
+        float b_inv = finv(b);
+        float r = fmul(a, b_inv);
 
         if (dumpEnable && splitCount <= SPLIT_LIMIT) {
             if (fdivCount % SPLIT_SIZE == 0 ) {
