@@ -121,6 +121,7 @@ object Assembler extends RegexParsers {
     "sw"    -> (r_ ~ int(16) ~ paren(r) ^^ { case rt ~ imm ~ rs => Sw(rt, rs, imm) }),
     "lwf"   -> (f_ ~ int(16) ~ paren(r) ^^ { case rt ~ imm ~ rs => Lwf(rt, rs, imm) }),
     "swf"   -> (f_ ~ int(16) ~ paren(r) ^^ { case rt ~ imm ~ rs => Swf(rt, rs, imm) }),
+    "sprogram" -> (r_ ~ int(16) ~ paren(r) ^^ { case rt ~ imm ~ rs => Sprogram(rt, rs, imm) }),
     "break" -> success_ { Break() },
     // J format
     "j"     -> (label ^^ { case a => J(a) }),
@@ -151,6 +152,7 @@ object Assembler extends RegexParsers {
   )
 
   val pseudoInstTable:Map[String, (Int, Parser[List[Instruction]])] = Map(
+    "nop"   -> ((1, success_ { List(Sll(0, 0, 0)) })),
     "move"  -> ((1, r_ ~ r ^^ { case rt ~ rs => List(Add(rt, rs, zero)) })),
     "neg"   -> ((1, r_ ~ r ^^ { case rt ~ rs => List(Sub(rt, zero, rs)) })),
     "lwx"   -> ((2, r_ ~ r_ ~ r ^^ { case rd ~ rs ~ rt => List(Add(at, rs, rt), Lw(rd, at, 0)) })),

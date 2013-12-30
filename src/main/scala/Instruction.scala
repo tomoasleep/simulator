@@ -85,6 +85,7 @@ object Instruction {
   case class Imvf(rt:Reg, rs:Reg) extends Instruction with I  { val op = 18; val imm = 0 }
   case class Fmvi(rt:Reg, rs:Reg) extends Instruction with I  { val op = 19; val imm = 0 }
   case class Lw(rt:Reg, rs:Reg, imm:Int) extends Instruction with I  { val op = 35 }
+  case class Sprogram(rt:Reg, rs:Reg, imm:Int) extends Instruction with I { val op = 40 }
   case class Sw(rt:Reg, rs:Reg, imm:Int) extends Instruction with I  { val op = 43 }
   case class Lwf(rt:Reg, rs:Reg, imm:Int) extends Instruction with I { val op = 49 }
   case class Swf(rt:Reg, rs:Reg, imm:Int) extends Instruction with I { val op = 56 }
