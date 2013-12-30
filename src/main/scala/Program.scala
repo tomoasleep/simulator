@@ -125,6 +125,7 @@ object Assembler extends RegexParsers {
     "sw"    -> (r_ ~ int(16) ~ paren(r) ^^ { case rt ~ imm ~ rs => Sw(rt, rs, imm) }),
     "lwf"   -> (f_ ~ int(16) ~ paren(r) ^^ { case rt ~ imm ~ rs => Lwf(rt, rs, imm) }),
     "swf"   -> (f_ ~ int(16) ~ paren(r) ^^ { case rt ~ imm ~ rs => Swf(rt, rs, imm) }),
+    "break" -> success_ { Break() },
     // J format
     "j"     -> (label ^^ { case a => J(a) }),
     "jal"   -> (label ^^ { case a => Jal(a) }),
