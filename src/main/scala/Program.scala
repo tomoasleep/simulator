@@ -165,6 +165,7 @@ object Assembler extends RegexParsers {
     "bge"   -> ((2, r_ ~ r_ ~ label ^^ { case rt ~ rs ~ a => List(Sub(at, rt, rs), Bgez(at, a - pos - 2)) })),
     "li"    -> ((1, r_ ~ int(16) ^^ { case rt ~ imm => List(Addi(rt, zero, imm)) })),
     "la"    -> ((1, r_ ~ label ^^ { case rt ~ a => List(Ori(rt, zero, a)) })),
+    "ld"    -> ((1, r_ ~ label ^^ { case rt ~ a => List(Lw(rt, zero, a)) })),
     "fmove" -> ((1, f_ ~ f ^^ { case rt ~ rs => List(Fadd(rt, rs, zero)) })),
     "fbeq"  -> ((2, f_ ~ f_ ~ label ^^ { case rt ~ rs ~ a => List(Fcseq(at, rt, rs), Bgtz(at, a - pos - 2)) })),
     "fbne"  -> ((2, f_ ~ f_ ~ label ^^ { case rt ~ rs ~ a => List(Fcseq(at, rt, rs), Blez(at, a - pos - 2)) })),
