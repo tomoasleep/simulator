@@ -88,7 +88,7 @@ object Instruction {
   case class Sprogram(rt:Reg, rs:Reg, imm:Int) extends Instruction with I { val op = 40 }
   case class Sw(rt:Reg, rs:Reg, imm:Int) extends Instruction with I  { val op = 43 }
   case class Lwf(rt:Reg, rs:Reg, imm:Int) extends Instruction with I { val op = 49 }
-  case class Swf(rt:Reg, rs:Reg, imm:Int) extends Instruction with I { val op = 56 }
+  case class Swf(rt:Reg, rs:Reg, imm:Int) extends Instruction with I { val op = 57 }
   case class Break() extends Instruction with I { val rt = 0; val rs = 0; val imm = 0; val op = 31 }
 
   // J format
