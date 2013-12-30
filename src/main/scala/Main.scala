@@ -16,7 +16,7 @@ object Main {
     if (parsedArgs.nonEmpty) {
       val program = Program.fromAssembly(parsedArgs.map(new File(_)))
       if (settings.assemble) {
-        val dest = parsedArgs.last.replaceFirst("\\.[^\\.]*$", "")
+        val dest = parsedArgs.head.replaceFirst("\\.[^\\.]*$", "")
         val out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(dest)))
         try {
           program.instructions.foreach { instruction =>
