@@ -93,29 +93,6 @@ class FPU {
         return r;
     }
 
-    float fdiv(float a, float b) throws IOException {
-        float b_inv = finv(b);
-        float r = fmul(a, b_inv);
-
-        if (dumpEnable && splitCount <= SPLIT_LIMIT) {
-            if (fdivCount % SPLIT_SIZE == 0 ) {
-                splitCount++;
-                if (fdivOut != null) {
-                    fdivOut.close();
-                }
-                if (splitCount > SPLIT_LIMIT) {
-                    return r;
-                }
-                fdivOut = new PrintWriter(String.format("fdiv.%d", fdivCount / SPLIT_SIZE));
-            }
-            fdivCount++;
-            fdivOut.printf("0x%08x 0x%08x 0x%08x%n",
-                Float.floatToRawIntBits(a), Float.floatToRawIntBits(b), Float.floatToRawIntBits(r));
-        }
-
-        return r;
-    }
-
     float finv(float a) throws IOException {
         float r = FinvCalculator.finv(a);
 

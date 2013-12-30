@@ -130,7 +130,6 @@ class Simulator(val program:Program, val settings:Settings) {
       case Fadd(fd, fs, ft) => f(fd) = if (useFPU) fpu.fadd(f(fs), f(ft)) else f(fs) + f(ft)
       case Fsub(fd, fs, ft) => f(fd) = if (useFPU) fpu.fsub(f(fs), f(ft)) else f(fs) - f(ft)
       case Fmul(fd, fs, ft) => f(fd) = if (useFPU) fpu.fmul(f(fs), f(ft)) else f(fs) * f(ft)
-      case Fdiv(fd, fs, ft) => f(fd) = if (useFPU) fpu.fdiv(f(fs), f(ft)) else f(fs) / f(ft)
       case Fabs(fd, fs) => f(fd) = abs(f(fs))
       case Fneg(fd, fs) => f(fd) = -f(fs)
       case Finv(fd, fs) => f(fd) = if (useFPU) fpu.finv(f(fs)) else 1.0f / f(fs)

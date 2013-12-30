@@ -133,7 +133,6 @@ object Assembler extends RegexParsers {
     "fadd"  -> (f_ ~ f_ ~ f ^^ { case rd ~ rs ~ rt => Fadd(rd, rs, rt) }),
     "fsub"  -> (f_ ~ f_ ~ f ^^ { case rd ~ rs ~ rt => Fsub(rd, rs, rt) }),
     "fmul"  -> (f_ ~ f_ ~ f ^^ { case rd ~ rs ~ rt => Fmul(rd, rs, rt) }),
-    "fdiv"  -> (f_ ~ f_ ~ f ^^ { case rd ~ rs ~ rt => Fdiv(rd, rs, rt) }),
     "fabs"  -> (f_ ~ f ^^ { case rd ~ rs => Fabs(rd, rs) }),
     "fneg"  -> (f_ ~ f ^^ { case rd ~ rs => Fneg(rd, rs) }),
     "finv"  -> (f_ ~ f ^^ { case rd ~ rs => Finv(rd, rs) }),
@@ -174,6 +173,7 @@ object Assembler extends RegexParsers {
     "fble"  -> ((2, f_ ~ f_ ~ label ^^ { case rt ~ rs ~ a => List(Fcle(at, rt, rs), Bgtz(at, a - pos - 2)) })),
     "fbgt"  -> ((2, f_ ~ f_ ~ label ^^ { case rt ~ rs ~ a => List(Fcle(at, rt, rs), Blez(at, a - pos - 2)) })),
     "fbge"  -> ((2, f_ ~ f_ ~ label ^^ { case rt ~ rs ~ a => List(Fclt(at, rt, rs), Blez(at, a - pos - 2)) })),
+    "fdiv"  -> ((2, f_ ~ f_ ~ f ^^ { case rd ~ rs ~ rt => List(Finv(at, rs), Fmul(rd, at, rt)) })),
     "fli"   -> ((3, f_ ~ float ^^ { case rt ~ imm =>
                  List(Lui(at, imm >> 16), Ori(at, at, imm & 0xffff), Imvf(rt, at)) }))
   )

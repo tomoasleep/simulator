@@ -106,7 +106,6 @@ object Instruction {
   case class Fadd(rd:Reg, rs:Reg, rt:Reg) extends Instruction with F { val funct = 0 }
   case class Fsub(rd:Reg, rs:Reg, rt:Reg) extends Instruction with F { val funct = 1 }
   case class Fmul(rd:Reg, rs:Reg, rt:Reg) extends Instruction with F { val funct = 2 }
-  case class Fdiv(rd:Reg, rs:Reg, rt:Reg) extends Instruction with F { val funct = 3 }
   case class Fabs(rd:Reg, rs:Reg) extends Instruction with F  { val rt = 0; val funct = 5 }
   case class Fneg(rd:Reg, rs:Reg) extends Instruction with F  { val rt = 0; val funct = 7 }
   case class Finv(rd:Reg, rs:Reg) extends Instruction with F  { val rt = 0; val funct = 8 }
