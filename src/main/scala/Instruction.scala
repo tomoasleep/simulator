@@ -69,9 +69,9 @@ object Instruction {
   case class Beq(rt:Reg, rs:Reg, imm:Int) extends Instruction with I { val op = 4 }
   case class Bne(rt:Reg, rs:Reg, imm:Int) extends Instruction with I { val op = 5 }
   case class Bltz(rs:Reg, imm:Int) extends Instruction with I { val op = 6; val rt = 0 }
-  case class Bgez(rs:Reg, imm:Int) extends Instruction with I { val op = 6; val rt = 1 }
+  case class Bgez(rs:Reg, imm:Int) extends Instruction with I { val op = 22; val rt = 0 }
   case class Blez(rs:Reg, imm:Int) extends Instruction with I { val op = 7; val rt = 0 }
-  case class Bgtz(rs:Reg, imm:Int) extends Instruction with I { val op = 7; val rt = 1 }
+  case class Bgtz(rs:Reg, imm:Int) extends Instruction with I { val op = 23; val rt = 0 }
   case class Addi(rt:Reg, rs:Reg, imm:Int) extends Instruction with I  { val op = 8 }
   case class Addiu(rt:Reg, rs:Reg, imm:Int) extends Instruction with I { val op = 9 }
   case class Slti(rt:Reg, rs:Reg, imm:Int) extends Instruction with I  { val op = 10 }
