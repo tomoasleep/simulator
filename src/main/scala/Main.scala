@@ -22,8 +22,10 @@ object Main {
           program.instructions.foreach { instruction =>
             out.writeInt(instruction.toInt)
           }
-          program.labels.foreach { case (labelName, pos) =>
-            System.out.println(f"$labelName%s $pos%d")
+          if (settings.dumpLabel) {
+            program.labels.foreach { case (labelName, pos) =>
+              System.out.println(f"$labelName%s $pos%d")
+          }
           }
         } finally {
           out.close
@@ -49,6 +51,7 @@ object Main {
         case ("-p" | "--prof" | "-s")  :: rest => iter(settings.copy(keepStats = true), rest)
         case ("-f" | "--enable-fpu")   :: rest => iter(settings.copy(useFPU = true), rest)
         case "--dump-fops"             :: rest => iter(settings.copy(useFPU = true, dumpFops = true), rest)
+        case "--dump-label"            :: rest => iter(settings.copy(assemble = true, dumpLabel = true), rest)
         case "-o"              :: dest :: rest => iter(settings.copy(output = Some(dest)), rest)
         case arg :: _ if (arg.startsWith("-")) => sys.error("unknown option: " + arg)
         case _ => (settings, args)
