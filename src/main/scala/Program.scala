@@ -31,7 +31,7 @@ object Program {
   }
 }
 
-case class Program(instructions:Array[Instruction], lineNumber:Array[Int])
+case class Program(instructions:Array[Instruction], lineNumber:Array[Int], labels:mutable.Map[String, Int])
 
 object Assembler extends RegexParsers {
   val zero = 0 // zero register
@@ -281,7 +281,7 @@ object Assembler extends RegexParsers {
       pos += n
     }
 
-    Program(instructions, lineNumber)
+    Program(instructions, lineNumber, labels)
   }
 
   def assemble(in:InputStream):Program = assemble(Source.fromInputStream(in))

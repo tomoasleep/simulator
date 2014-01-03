@@ -22,9 +22,13 @@ object Main {
           program.instructions.foreach { instruction =>
             out.writeInt(instruction.toInt)
           }
+          program.labels.foreach { case (labelName, pos) =>
+            System.out.println(f"$labelName%s $pos%d")
+          }
         } finally {
           out.close
         }
+
       } else {
         settings.output.foreach { dest =>
           Console.setOut(new FileOutputStream(dest))
