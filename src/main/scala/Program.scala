@@ -173,7 +173,7 @@ object Assembler extends RegexParsers {
     "fble"  -> ((2, f_ ~ f_ ~ label ^^ { case rt ~ rs ~ a => List(Fcle(at, rt, rs), Bgtz(at, a - pos - 2)) })),
     "fbgt"  -> ((2, f_ ~ f_ ~ label ^^ { case rt ~ rs ~ a => List(Fcle(at, rt, rs), Blez(at, a - pos - 2)) })),
     "fbge"  -> ((2, f_ ~ f_ ~ label ^^ { case rt ~ rs ~ a => List(Fclt(at, rt, rs), Blez(at, a - pos - 2)) })),
-    "fdiv"  -> ((2, f_ ~ f_ ~ f ^^ { case rd ~ rs ~ rt => List(Finv(at, rs), Fmul(rd, at, rt)) })),
+    "fdiv"  -> ((2, f_ ~ f_ ~ f ^^ { case rd ~ rs ~ rt => List(Finv(at, rt), Fmul(rd, rs, at)) })),
     "fli"   -> ((3, f_ ~ float ^^ { case rt ~ imm =>
                  List(Lui(at, imm >> 16), Ori(at, at, imm & 0xffff), Imvf(rt, at)) }))
   )
