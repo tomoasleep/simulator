@@ -36,6 +36,10 @@ class Simulator(val program:Program, val settings:Settings) {
     pc = 0
   }
 
+  def beforeExit() {
+    fpu.beforeExit()
+  }
+
   def run() {
     reset()
 
@@ -74,6 +78,7 @@ class Simulator(val program:Program, val settings:Settings) {
                     " (at line: " + lineNumber(_pc).toString + ")")
         }
     }
+    beforeExit()
   }
 
   def execute(instruction:Instruction) {

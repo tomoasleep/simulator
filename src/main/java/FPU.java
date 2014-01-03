@@ -134,4 +134,11 @@ class FPU {
 
         return r;
     }
+
+    void beforeExit() {
+        if (faddOut != null) faddOut.close();
+        if (fmulOut != null) fmulOut.close();
+        if (finvOut != null) finvOut.close();
+        if (fsqrtOut != null) fsqrtOut.close();
+    }
 }
