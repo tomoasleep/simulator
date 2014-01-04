@@ -72,7 +72,8 @@ class FPU {
     }
 
     float fmul(float a, float b) throws IOException {
-        float r = a * b;
+        float r = FmulCalculator.calc.fmul(a, b);
+        FmulCalculator.validCheck(a, b);
 
         if (dumpEnable && splitCount <= SPLIT_LIMIT) {
             if (fmulCount % SPLIT_SIZE == 0 ) {
