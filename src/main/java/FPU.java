@@ -5,15 +5,11 @@ import java.io.*;
 class FPU {
     private boolean dumpEnable = false;
     private PrintWriter faddOut;
-    private PrintWriter fsubOut;
     private PrintWriter fmulOut;
-    private PrintWriter fdivOut;
     private PrintWriter finvOut;
     private PrintWriter fsqrtOut;
     private long faddCount = 0;
-    private long fsubCount = 0;
     private long fmulCount = 0;
-    private long fdivCount = 0;
     private long finvCount = 0;
     private long fsqrtCount = 0;
     private long splitCount = 0;
@@ -50,25 +46,7 @@ class FPU {
     }
 
     float fsub(float a, float b) throws IOException {
-        float r = fadd(a, -b);
-
-        if (dumpEnable && splitCount <= SPLIT_LIMIT) {
-            if (fsubCount % SPLIT_SIZE == 0 ) {
-                splitCount++;
-                if (fsubOut != null) {
-                    fsubOut.close();
-                }
-                if (splitCount > SPLIT_LIMIT) {
-                    return r;
-                }
-                fsubOut = new PrintWriter(String.format("fsub.%d", fsubCount / SPLIT_SIZE));
-            }
-            fsubCount++;
-            fsubOut.printf("0x%08x 0x%08x 0x%08x%n",
-                Float.floatToRawIntBits(a), Float.floatToRawIntBits(b), Float.floatToRawIntBits(r));
-        }
-
-        return r;
+        return fadd(a, -b);
     }
 
     float fmul(float a, float b) throws IOException {
