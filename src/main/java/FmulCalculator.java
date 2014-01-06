@@ -81,20 +81,14 @@ public class FmulCalculator {
         if (debug) System.err.printf("round_up: %d, rounded_exp: %d, rounded_frac: %08x\n",
                 round_up, rounded_exponent, rounded_fraction);
 
-        if (exponents_sum < 0) {
+        if (rounded_exponent <= 0) {
             return buildUint(sign_mul, 0, 0);
-        } else if (exponents_sum >= 255) {
+        } else if (rounded_exponent >= 255) {
             return buildUint(sign_mul, 0xff, 0);
         }
 
         int result_fraction = (int)getRange((long)rounded_fraction, shifted_fraction_length - 2, 3);
         int result_exponent = rounded_exponent;
-
-        if ((getBit(rounded_exponent, 8) == 1) || (getRange(rounded_exponent, 7, 0) == 0xff)) {
-            return buildUint(sign_mul, 0xff, 0);
-        } else if (getRange(rounded_exponent, 7, 0) == 0x00) {
-            return buildUint(sign_mul, 0, 0);
-        }
 
         if (debug) System.err.printf("result_exp: %d, result_frac: %08x\n",
                 result_exponent, result_fraction);
@@ -197,7 +191,7 @@ public class FmulCalculator {
     }
 
     public static void tester(String args[]) {
-        tester(100000);
+        tester(10000000);
     }
 
     public static void tester(int test_times) {
