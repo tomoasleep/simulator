@@ -20,6 +20,34 @@ public class FaddCalculator {
     }
 
     public int fadd_uint32_t(int a, int b) {
+        // check input values exception?
+        if ( isZero(a) || isNaN(a) || isInf(a) ||
+                isZero(b) || isNaN(b) || isInf(b)) {
+            boolean isntPosInf = !(isPosInf(a) || isPosInf(b));
+            boolean isntNegInf = !(isNegInf(a) || isNegInf(b));
+            int posInf = setSign(setExp(0, 0xff), 0);
+            int negInf = setSign(setExp(0, 0xff), 1);
+            int nanValue = setSign(setExp(setFrac(0, 1), 0xff), 0);
+
+            if (isZero(a) & isZero(b)) {
+                return 0;
+            } else if (isZero(a)) {
+                return b;
+            } else if (isZero(b)) {
+                return a;
+            } else if (isNaN(a)) {
+                return a;
+            } else if (isNaN(b)) {
+                return b;
+            } else if (isntPosInf) {
+                return negInf;
+            } else if (isntNegInf){
+                return posInf;
+            } else {
+                return nanValue;
+            }
+        }
+
         // swap to be abs(a) > abs(b)
         if (getAbs(a) < getAbs(b)) {
             int tmp = a; a = b; b = tmp;
@@ -136,6 +164,26 @@ public class FaddCalculator {
         if (debug) System.err.println("-------------");
 
         return result;
+    }
+
+    private boolean isZero(int a) {
+        return getExp(a) == 0;
+    }
+
+    private boolean isInf(int a) {
+        return getExp(a) == 0xff && getFrac(a) == 0;
+    }
+
+    private boolean isPosInf(int a) {
+        return getSign(a) == 0 && isInf(a);
+    }
+
+    private boolean isNegInf(int a) {
+        return getSign(a) == 1 && isInf(a);
+    }
+
+    private boolean isNaN(int a) {
+        return getExp(a) == 0xff && getFrac(a) != 0;
     }
 
     private int getSign(int a) {
