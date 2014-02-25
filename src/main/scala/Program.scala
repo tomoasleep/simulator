@@ -223,12 +223,34 @@ object Assembler extends RegexParsers {
     val main = new ArrayBuffer[(String, String, Int)]()
     val loader = new ArrayBuffer[Instruction]()
 
+    val nop = Sll(0, 0, 0)
+    val trapRtnReg = 28
+    val trapHanders = Array(
+      "IOReadFault",
+      "IOWriteFault",
+      "DeviceTrap",
+      "PagingFault",
+      "ClockInterrupt"
+    )
+
+    /* add initializer */
     loader += Xor(zero, zero, zero)
     loader += Imvf(zero, zero)
     loader += Ori(at, zero, 1)
     loader += Sll(hp, at, 10)
     loader += Sll(sp, at, 20)
     loader += Addi(sp, sp, -1)
+
+    val initializerEnd = loader.length
+
+    for (x <- 6 to 9) loader += nop
+
+    /* add trap handlers */
+    val trapHanderBegin = loader.length
+    for (x <- trapHanders) loader += Jr(28)
+    val trapHanderEnd = loader.length
+
+    loader(initializerEnd) = J(trapHanderEnd)
 
     source.getLines.zipWithIndex.foreach { case (line, lineNr) =>
       line.replaceFirst("#.*$", "") match {
@@ -267,6 +289,14 @@ object Assembler extends RegexParsers {
       labels(label) += loader.length
     }
 
+    /* rewrite trap handlers */
+    trapHanders.zipWithIndex.foreach { case (label, idx) =>
+      val handlerPos = idx + trapHanderBegin
+      if (labels.contains(label)) {
+        instructions(handlerPos) = J(labels(label))
+      }
+    }
+
     main.iterator.foreach { case (opcode, operands, lineNr) =>
       if (instTable.contains(opcode)) {
         instructions(pos) = doParse(instTable(opcode), operands)
@@ -286,3 +316,4 @@ object Assembler extends RegexParsers {
 
   def assemble(in:InputStream):Program = assemble(Source.fromInputStream(in))
 }
+
