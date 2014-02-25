@@ -247,7 +247,7 @@ object Assembler extends RegexParsers {
 
     /* add trap handlers */
     val trapHanderBegin = loader.length
-    for (x <- trapHanders) loader += Jr(28)
+    for (x <- trapHanders) loader += Jr(trapRtnReg)
     val trapHanderEnd = loader.length
 
     loader(initializerEnd) = J(trapHanderEnd)
